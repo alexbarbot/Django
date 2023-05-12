@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        {% block title %}
+        <title>Computer Management</title>
+        {% endblock %}
+        <meta charset="utf-8">
+        <meta name=" viewport "
+        content="width=device-width ,
+        initial-scale=1">
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}"
+    </head>
+    <body>
+        <h1>RT Dev</h1>
+
+        {% block menu %}
+            <h2>Menu</h2>
+            <ul id="menu">
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'machines' %}">machines</a></li>
+                <li><a href="{% url 'personnels' %}">personnels</a></li>
+                <li><a href="{% url 'add-machines' %}">Ajouter une machine</a></li>
+                <li><a href="{% url 'add-personnels' %}">ajouter un personnels</a></li>
+            </ul>
+        {% endblock %}
+
+        {% load static %}
+        <p>
+            <img src="{% static 'computerApp/images/335i.jpg' %}" alt="logo" style="width:300px;height:200px">   
+        </p>
+
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>
+
+
+
+
