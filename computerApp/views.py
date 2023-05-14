@@ -59,3 +59,4 @@ def personnel_add_form(request):
 		form = AddPersonnelForm()
 		context = {'form': form}
 		return render(request, 'computerApp/personnel_add.html',context)
+
