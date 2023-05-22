@@ -1,0 +1,50 @@
+/* custom.css */
+#menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+  }
+  
+  #menu li {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  
+  #menu li a {
+    text-decoration: none;
+    padding: 10px;
+    color: #333;
+  }
+  
+  #menu li a:hover {
+    color: #555;
+  }
+  
+  h1 {
+    color: #333;
+  }
+  
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  ul li {
+    margin-bottom: 10px;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #007bff;
+  }
+  
+  a:hover {
+    color: #0056b3;
+  }
+  
+  p {
+    color: #555;
+  }
+  
