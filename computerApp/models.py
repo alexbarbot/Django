@@ -1,5 +1,7 @@
 from django.db import models
 from datetime import datetime
+from django import forms
+
 
 # Create your models here.
 class Machine(models.Model):
@@ -12,23 +14,15 @@ class Machine(models.Model):
     )
 
     id = models.AutoField(primary_key=True, editable=False)
-    nom = models.CharField(max_length=6)
+    nom = models.CharField(max_length=10)
+    #etat = forms.BooleanField(required=True, label="état de la machine")
     maintenanceDate = models.DateField(default = datetime.now())
     mach = models.CharField(max_length=32, choices= TYPE, default='PC')
-    
-    """"
-    id = models.AutoField(
-                    primary_key=True,
-                    editable=False)
-    nom= models.CharField(
-                max_length= 6)
-    def __str__ (self):
-        return str(self.id) + " -> " + self.nom
-
-    def get_name(self):
-        return str(self.id) + " " + self.nom
-    """
-
+    #appart = forms.ModelChoiceField(queryset=Personnel.objects.all(),required=True, label="appartient à ")
+    def __str__(self):
+        return self.nom
+    def delete(self):
+        super().delete()
 
 class Personnel(models.Model):
 
@@ -40,32 +34,13 @@ class Personnel(models.Model):
     )
 
     id = models.AutoField(primary_key=True, editable=False)
-    nom = models.CharField(max_length=8)
+    nom = models.CharField(max_length=10)
     maintenanceDate = models.DateField(default = datetime.now())
     mach = models.CharField(max_length=16, choices= TYPE, default='Genre')
-
-    """
-    id = models.AutoField(
-                    primary_key=True,
-                    editable=False)
-    nom= models.CharField(
-                max_length= 8)
-    prenom = models.CharField(
-                max_length= 16)
-    def __str__ (self):
-        return str(self.id) + " -> " + self.nom
-
-    def get_name(self):
-        return str(self.id) + " " + self.nom
-    
-    def __str__ (self):
-        return str(self.id) + " -> " + self.prenom
-
-    def get_name(self):
-        return str(self.id) + " " + self.prenom
-    """
-
-
+    def __str__(self):
+        return self.nom
+    def delete(self):
+        super().delete()
 
 
 

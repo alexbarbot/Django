@@ -1,6 +1,23 @@
-{% extends "index.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Liste des Personnes</title>
+</head>
+<body>
 
-{% block content %}
+    {% block menu %}
+    <ul id="menu">
+        <li><a href="{% url 'index' %}">Home</a></li>
+        <li><a href="{% url 'machines' %}">machines</a></li>
+        <li><a href="{% url 'personnels' %}">personnels</a></li>
+        <li><a href="{% url 'add-machines' %}">Ajouter une machine</a></li>
+        <li><a href="{% url 'add-personnels' %}">ajouter un personnels</a></li>
+        <li><a href="{% url 'delete-machines' %}">Supprimer une machine</a></li>
+        <li><a href="{% url 'delete-personnels' %}">Supprimer une personne</a></li>
+    </ul>
+    {% endblock %}
+
+    {% block content %}
 
     <h1>Liste des personnels </h1>
    
@@ -17,3 +34,6 @@
             <p>il n\'y a pas de personnels.</p>
         {% endif %}
 {% endblock %}
+
+</body>
+</html>

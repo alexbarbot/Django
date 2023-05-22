@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from computerApp.models import Machine, Personnel
-from .forms import AddMachineForm, AddPersonnelForm
+from .forms import AddMachineForm, AddPersonnelForm, DeleteMachineForm, DeletePersonnelForm
+
 
 # Create your views here.
 
@@ -39,14 +40,14 @@ def machine_add_form(request):
 	if request.method == 'POST':
 		form = AddMachineForm(request.POST or None)
 		if form.is_valid():
-			new_machine = Machine(nom=form.cleaned_data['nom'])
+			nom = form.cleaned_data['nom']
+			new_machine = Machine(nom=nom)
 			new_machine.save()
 			return redirect('machines')
 	else:
 		form = AddMachineForm()
 		context = {'form': form}
 		return render(request, 'computerApp/machines_add.html',context)
-
 
 def personnel_add_form(request):
 	if request.method == 'POST':
@@ -60,3 +61,28 @@ def personnel_add_form(request):
 		context = {'form': form}
 		return render(request, 'computerApp/personnel_add.html',context)
 
+def machine_delete_form(request):
+    if request.method == 'POST':
+        form = DeleteMachineForm(request.POST)
+        if form.is_valid():
+            machines = form.cleaned_data['machines']
+            for machine in machines:
+                machine.delete()
+            return redirect('machines')
+    else:
+        form = DeleteMachineForm()
+    context = {'form': form}
+    return render(request, 'computerApp/machines_delete.html', context)
+
+def personnel_delete_form(request):
+    if request.method == 'POST':
+        form = DeletePersonnelForm(request.POST)
+        if form.is_valid():
+            personnels = form.cleaned_data['personnels']
+            for personnel in personnels:
+                personnel.delete()
+            return redirect('personnels')
+    else:
+        form = DeletePersonnelForm()
+    context = {'form': form}
+    return render(request, 'computerApp/personnels_delete.html', context)
