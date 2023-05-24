@@ -36,5 +36,11 @@
             blabla de la premiere page 
             faire un menu déroulant pour quand on click sur gestion on a le choix entre machines ou personnels
         {% endblock %}
+        <script>
+            var socket = io.connect('http://localhost:8000/computerApp/Gestion');
+            socket.on('notification', function(message) {
+            alert(message);
+            });
+        </script>
     </body>
 </html>
