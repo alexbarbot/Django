@@ -47,7 +47,7 @@ def machine_add_form(request):
 	else:
 		form = AddMachineForm()
 		context = {'form': form}
-		return render(request, 'computerApp/machines_add.html',context)
+		return render(request, 'computerApp/machines_list.html',context)
 
 def personnel_add_form(request):
 	if request.method == 'POST':

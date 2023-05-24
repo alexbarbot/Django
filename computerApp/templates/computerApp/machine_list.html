@@ -19,7 +19,7 @@
     {% endblock %}
 
     {% block content %}
-    <h1>Liste des machines</h1>
+    <h2>Liste des machines</h2>
     {% if machines %}
     <ul>
       {% for machine in machines %}
@@ -33,7 +33,10 @@
   {% else %}
     <p>Il n'y a pas de machines.</p>
   {% endif %}
+  <h2>suppression des machines</h2>
+  <h2>ajout des machines</h2>
   {% endblock %}
+
 
 </body>
 </html>
