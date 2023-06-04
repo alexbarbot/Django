@@ -16,73 +16,70 @@ def index(request) :
 
 def machine_list_view(request) :
 	machines = Machine.objects.all()
-	context={'machines': machines}
-	return render(request, 'computerApp/machine_list.html', context)
+	context = {'machines': machines}
+	return render(request, 'computerApp/machines_list.html', context)
 
 def machine_detail_view(request, pk):
 	machine = get_object_or_404(Machine, id=pk)
 	context={'machine': machine}
-	return render(request , 'computerApp/machine_detail.html',context)
+	return render(request , 'computerApp/machines_detail.html',context)
 
 def personnel_list_view(request) :
 	personnel = Personnel.objects.all()
 	context={'personnels': personnel}
-	return render(request,
-	'computerApp/personnel_list.html',
-	context)
+	return render(request, 'computerApp/personnel_list.html',context)
 
 def personnel_detail_view(request, pk):
 	personnel = get_object_or_404(Personnel, id=pk)
 	context={'personnel': personnel}
 	return render(request , 'computerApp/personnel_detail.html',context)
 
-def machine_add_form(request):
-	if request.method == 'POST':
-		form = AddMachineForm(request.POST or None)
-		if form.is_valid():
-			nom = form.cleaned_data['nom']
-			new_machine = Machine(nom=nom)
-			new_machine.save()
-			return redirect('machines')
-	else:
-		form = AddMachineForm()
-		context = {'form': form}
-		return render(request, 'computerApp/machines_list.html',context)
-
-def personnel_add_form(request):
-	if request.method == 'POST':
-		form = AddPersonnelForm(request.POST or None)
-		if form.is_valid():
-			new_personnel = Personnel(nom=form.cleaned_data['nom'])
-			new_personnel.save()
-			return redirect('personnels')
-	else:
-		form = AddPersonnelForm()
-		context = {'form': form}
-		return render(request, 'computerApp/personnel_add.html',context)
-
-def machine_delete_form(request):
+def machine_add_view(request):
     if request.method == 'POST':
-        form = DeleteMachineForm(request.POST)
+        form = AddMachineForm(request.POST)
         if form.is_valid():
-            machines = form.cleaned_data['machines']
-            for machine in machines:
-                machine.delete()
+            nom = form.cleaned_data['nom']
+            new_machine = Machine(nom=nom)
+            new_machine.save()
             return redirect('machines')
     else:
-        form = DeleteMachineForm()
+        form = AddMachineForm()
+    
     context = {'form': form}
-    return render(request, 'computerApp/machines_delete.html', context)
+    return render(request, 'computerApp/machines_list.html', context)
 
-def personnel_delete_form(request):
+def personnel_add_view(request):
     if request.method == 'POST':
-        form = DeletePersonnelForm(request.POST)
+        form = AddPersonnelForm(request.POST)
         if form.is_valid():
-            personnels = form.cleaned_data['personnels']
-            for personnel in personnels:
-                personnel.delete()
+            nom = form.cleaned_data['nom']
+            new_personnel = Personnel(nom=nom)
+            new_personnel.save()
             return redirect('personnels')
     else:
-        form = DeletePersonnelForm()
+        form = AddPersonnelForm()
+    
     context = {'form': form}
-    return render(request, 'computerApp/personnels_delete.html', context)
+    return render(request, 'computerApp/personnel_list.html', context)
+
+def personnel_delete_view(request):
+    if request.method == 'POST':
+        personnels_ids = request.POST.getlist('personnels')
+        personnels = Personnel.objects.filter(id__in=personnels_ids)
+        personnels.delete()
+        return redirect('personnels')
+
+    personnels = Personnel.objects.all()
+    context = {'personnels': personnels}
+    return render(request, 'computerApp/personnel_list.html', context)
+
+def machine_delete_view(request):
+    if request.method == 'POST':
+        machines_ids = request.POST.getlist('machines')
+        machines = Machine.objects.filter(id__in=machines_ids)
+        machines.delete()
+        return redirect('machines')
+
+    machines = Machine.objects.all()
+    context = {'machines': machines}
+    return render(request, 'computerApp/machines_list.html', context)

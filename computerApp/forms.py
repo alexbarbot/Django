@@ -8,6 +8,7 @@ TYPE = (
         ('Server', ('Serveur - Simple Server to deploy virtual machines')),
         ('Switch', ('Switch - To maintains and connect servers')),
     )
+    
 class AddMachineForm (forms.Form) : 
     
     nom = forms.CharField(required=True, label='Nom de la machine')

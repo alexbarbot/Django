@@ -33,7 +33,7 @@ class Personnel(models.Model):
         ('ND', ('ND - ne préfaire pas ce prononcer')),
     )
 
-    id = models.AutoField(primary_key=True, editable=False)
+    # id = models.AutoField(primary_key=True, editable=False)
     nom = models.CharField(max_length=10)
     maintenanceDate = models.DateField(default = datetime.now())
     mach = models.CharField(max_length=16, choices= TYPE, default='Genre')

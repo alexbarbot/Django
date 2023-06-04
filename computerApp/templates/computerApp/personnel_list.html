@@ -1,39 +1,102 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Liste des Personnes</title>
+  <title>Liste des personnes</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css">
 </head>
 <body>
 
-    {% block menu %}
-    <ul id="menu">
-        <li><a href="{% url 'index' %}">Home</a></li>
-        <li><a href="{% url 'machines' %}">machines</a></li>
-        <li><a href="{% url 'personnels' %}">personnels</a></li>
-        <li><a href="{% url 'add-machines' %}">Ajouter une machine</a></li>
-        <li><a href="{% url 'add-personnels' %}">ajouter un personnels</a></li>
-        <li><a href="{% url 'delete-machines' %}">Supprimer une machine</a></li>
-        <li><a href="{% url 'delete-personnels' %}">Supprimer une personne</a></li>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <img src="/static/computerApp/images/rtdev.png" alt="Logo" class="img-fluid mx-auto d-block mb-4" style="max-width: 160px;">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'index' %}">Home</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="machinesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Machines
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="machinesDropdown">
+            <li><a class="dropdown-item" href="{% url 'machines' %}">Machines</a></li>
+            <li><a class="dropdown-item" href="{% url 'add-machines' %}">Ajouter une machine</a></li>
+            <li><a class="dropdown-item" href="{% url 'delete-machines' %}">Supprimer une machine</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="personnelsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Personnels
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="personnelsDropdown">
+            <li><a class="dropdown-item" href="{% url 'personnels' %}">Personnels</a></li>
+            <li><a class="dropdown-item" href="{% url 'add-personnels' %}">Ajouter un personnel</a></li>
+            <li><a class="dropdown-item" href="{% url 'delete-personnels' %}">Supprimer une personne</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  {% block content %}
+  
+  <h1>Liste des personnels</h1>
+  
+  {% if personnels %}
+    <ul class="list-group">
+      {% for personnel in personnels %}
+        <li class="list-group-item">
+          <a href="{% url 'personnel-detail' personnel.id %}">
+            {{ personnel.id }} - ({{ personnel.nom }})
+          </a>
+        </li>
+      {% endfor %}
     </ul>
-    {% endblock %}
+  {% else %}
+    <p>Il n'y a pas de personnels.</p>
+  {% endif %}
+  
+  <h2>Ajout de personnels</h2>
+  
+  <form method="post" action="{% url 'add-personnels' %}">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="nom" class="form-label">Nom du personnel</label>
+      <input type="text" class="form-control" id="nom" name="nom" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+  </form>
+  
+  <h2>Suppression de personnels</h2>
+  
+  <form method="post" action="{% url 'delete-personnels' %}">
+    {% csrf_token %}
+    <ul class="list-group">
+      {% for personnel in personnels %}
+        <li class="list-group-item">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="personnels" value="{{ personnel.id }}" id="personnel-{{ personnel.id }}">
+            <label class="form-check-label" for="personnel-{{ personnel.id }}">
+              {{ personnel.id }} - ({{ personnel.nom }})
+            </label>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+    <button type="submit" class="btn btn-danger">Supprimer</button>
+  </form>
+  
+  {% endblock %}
+</div>
 
-    {% block content %}
-
-    <h1>Liste des personnels </h1>
-   
-    {% if personnels%}
-        <ul>
-            {% for personnel in personnels %}
-            <li>
-                <a href="{% url 'personnel-detail' personnel.id %}">
-                {{ personnel.id }} -  ({{personnel.nom}})
-            </li>
-            {% endfor %}
-        </ul>
-        {% else %}
-            <p>il n\'y a pas de personnels.</p>
-        {% endif %}
-{% endblock %}
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
