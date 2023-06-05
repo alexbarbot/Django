@@ -3,6 +3,15 @@
 <head>
   <title>Liste des personnes</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css">
+  <style>
+    .card-body ul {
+      padding-left: 0;
+    }
+    
+    .card-body li {
+      list-style: none;
+    }
+  </style>
 </head>
 <body>
 
@@ -63,35 +72,48 @@
     <p>Il n'y a pas de personnels.</p>
   {% endif %}
   
-  <h2>Ajout de personnels</h2>
-  
-  <form method="post" action="{% url 'add-personnels' %}">
-    {% csrf_token %}
-    <div class="mb-3">
-      <label for="nom" class="form-label">Nom du personnel</label>
-      <input type="text" class="form-control" id="nom" name="nom" required>
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h2>Ajout de personnels</h2>
+      
+          <form method="post" action="{% url 'add-personnels' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="nom" class="form-label">Nom du personnel</label>
+              <input type="text" class="form-control" id="nom" name="nom" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+          </form>
+        </div>
+      </div>
     </div>
-    <button type="submit" class="btn btn-primary">Ajouter</button>
-  </form>
-  
-  <h2>Suppression de personnels</h2>
-  
-  <form method="post" action="{% url 'delete-personnels' %}">
-    {% csrf_token %}
-    <ul class="list-group">
-      {% for personnel in personnels %}
-        <li class="list-group-item">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="personnels" value="{{ personnel.id }}" id="personnel-{{ personnel.id }}">
-            <label class="form-check-label" for="personnel-{{ personnel.id }}">
-              {{ personnel.id }} - ({{ personnel.nom }})
-            </label>
-          </div>
-        </li>
-      {% endfor %}
-    </ul>
-    <button type="submit" class="btn btn-danger">Supprimer</button>
-  </form>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h2>Suppression de personnels</h2>
+      
+          <form method="post" action="{% url 'delete-personnels' %}">
+            {% csrf_token %}
+            <ul class="list-group">
+              {% for personnel in personnels %}
+                <li class="list-group-item">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="personnels" value="{{ personnel.id }}" id="personnel-{{ personnel.id }}">
+                    <label class="form-check-label" for="personnel-{{ personnel.id }}">
+                      {{ personnel.id }} - ({{ personnel.nom }})
+                    </label>
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+            <button type="submit" class="btn btn-danger">Supprimer</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
   
   {% endblock %}
 </div>
