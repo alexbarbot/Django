@@ -32,14 +32,16 @@ def personnel_list_view(request) :
 def personnel_detail_view(request, pk):
 	personnel = get_object_or_404(Personnel, id=pk)
 	context={'personnel': personnel}
-	return render(request , 'computerApp/personnel_detail.html',context)
+	return render(request, 'computerApp/personnel_detail.html', context)
 
 def machine_add_view(request):
     if request.method == 'POST':
         form = AddMachineForm(request.POST)
         if form.is_valid():
             nom = form.cleaned_data['nom']
-            new_machine = Machine(nom=nom)
+            mach = form.cleaned_data['mach']
+            etat = form.cleaned_data['etat']
+            new_machine = Machine(nom=nom,mach=mach,etat=etat)
             new_machine.save()
             return redirect('machines')
     else:
@@ -83,3 +85,7 @@ def machine_delete_view(request):
     machines = Machine.objects.all()
     context = {'machines': machines}
     return render(request, 'computerApp/machines_list.html', context)
+
+def gestion_view(request):
+    context = {}
+    return render(request, 'computerApp/gestion.html', context)

@@ -6,3 +6,37 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.online {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: green;
+}
+
+.offline {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: red;
+}
+
+.custom-t.custom-table {
+    width: 50%;
+    margin-right: 20px;
+}able {
+    width: 50%;
+    margin-right: 20px;
+}
+.custom-table {
+    width: 50%;
+    margin-right: 20px;
+}
+.card-body ul {
+    padding-left: 0;
+}
+
+.card-body li {
+    list-style: none;
+}
