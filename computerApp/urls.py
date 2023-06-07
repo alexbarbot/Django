@@ -12,5 +12,6 @@ urlpatterns = [
 	path('delete-machines/', views.machine_delete_view, name='delete-machines'),
 	path('delete-personnels/', views.personnel_delete_view, name='delete-personnels'),
 	path('gestion/', views.gestion_view, name='gestion'),
+	
 ]
 

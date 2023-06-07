@@ -89,3 +89,10 @@ def machine_delete_view(request):
 def gestion_view(request):
     context = {}
     return render(request, 'computerApp/gestion.html', context)
+
+
+
+
+
+
+

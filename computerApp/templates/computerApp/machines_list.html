@@ -5,45 +5,77 @@
           <div class="col-6">
             <h2>Liste des machines</h2>
             {% if machines %}
-            <ul class="list-group">
-                {% for machine in machines %}
-                <li class="list-group-item">
-                    
-                    <a href="{% url 'machine-detail' machine.id %}">
-                       {{ machine.id }} - ({{ machine.nom }})
-                    </a>
-                    {% if machine.etat == True %}
-                    <p><span class="online"></span> En ligne </p>
-                    {% else %}
-                    <p><span class-"offline"></span> Hors ligne </p>
-                    {% endif %}
-                </li>
-                {% endfor %}
-            </ul>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>État</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for machine in machines %}
+                    <tr>
+                        <td>{{ machine.id }}</td>
+                        <td>
+                            <a href="{% url 'machine-detail' machine.id %}">
+                                {{ machine.nom }}
+                            </a>
+                        </td>
+                        <td>
+                            {% if machine.etat == True %}
+                                <span class="online"></span> En ligne
+                            {% else %}
+                                <span class="offline"></span> Hors ligne
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             {% else %}
             <p>Il n'y a pas de machines.</p>
             {% endif %}
           </div>
 
           <div class="col-6">
-            <h2>Suppression des machines</h2>
-            <form method="post" action="{% url 'delete-machines' %}">
-                {% csrf_token %}
-                <ul class="list-group custom-table">
-                    {% for machine in machines %}
-                    <li class="list-group-item">
+    <h2>Suppression des machines</h2>
+    <form method="post" action="{% url 'delete-machines' %}">
+        {% csrf_token %}
+        <table class="table table-sm custom-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>État</th>
+                    <th>Sélectionner</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for machine in machines %}
+                <tr>
+                    <td>{{ machine.id }}</td>
+                    <td>{{ machine.nom }}</td>
+                    <td>
+                        {% if machine.etat == True %}
+                            <span class="online"></span> En ligne
+                        {% else %}
+                            <span class="offline"></span> Hors ligne
+                        {% endif %}
+                    </td>
+                    <td>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="machines" value="{{ machine.id }}">
-                            <label class="form-check-label">
-                                {{ machine.id }} - ({{ machine.nom }})
-                            </label>
                         </div>
-                    </li>
-                    {% endfor %}
-                </ul>
-                <button class="btn btn-danger" type="submit">Supprimer</button>
-            </form>
-          </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button class="btn btn-danger" type="submit">Supprimer</button>
+    </form>
+</div>
+
         </div>
 
         <h2>Ajouter une machine</h2>
@@ -55,9 +87,5 @@
             </div>
             <button class="btn btn-primary" type="submit">Ajouter une machine</button>
         </form>
-        {% endblock %}
     </div>
-
-    
-</body>
-</html>
+{% endblock %}
