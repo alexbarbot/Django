@@ -1,5 +1,10 @@
 {% extends "index.html" %}
 {% block content %}
+{% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
     <div class="container mt-4">
         <div class="row">
           <div class="col-6">
@@ -39,46 +44,52 @@
           </div>
 
           <div class="col-6">
-    <h2>Suppression des machines</h2>
-    <form method="post" action="{% url 'delete-machines' %}">
-        {% csrf_token %}
-        <table class="table table-sm custom-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>État</th>
-                    <th>Sélectionner</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for machine in machines %}
-                <tr>
-                    <td>{{ machine.id }}</td>
-                    <td>{{ machine.nom }}</td>
-                    <td>
-                        {% if machine.etat == True %}
-                            <span class="online"></span> En ligne
-                        {% else %}
-                            <span class="offline"></span> Hors ligne
-                        {% endif %}
-                    </td>
-                    <td>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="machines" value="{{ machine.id }}">
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <button class="btn btn-danger" type="submit">Supprimer</button>
-    </form>
-</div>
-
+            <h2>Suppression des machines</h2>
+            <form method="post" action="{% url 'delete-machines' %}">
+                {% csrf_token %}
+                <table class="table table-sm custom-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom</th>
+                            <th>État</th>
+                            <th>Sélectionner</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for machine in machines %}
+                        <tr>
+                            <td>{{ machine.id }}</td>
+                            <td>{{ machine.nom }}</td>
+                            <td>
+                                {% if machine.etat == True %}
+                                    <span class="online"></span> En ligne
+                                {% else %}
+                                    <span class="offline"></span> Hors ligne
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="machines" value="{{ machine.id }}">
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <button class="btn btn-danger" type="submit">Supprimer</button>
+            </form>
+          </div>
         </div>
 
         <h2>Ajouter une machine</h2>
+
+        {% comment %} {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %} {% endcomment %}
+      
 
         <form method="post" action="{% url 'add-machines' %}">
             {% csrf_token %}

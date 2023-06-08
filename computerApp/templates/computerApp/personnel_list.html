@@ -1,6 +1,11 @@
 {% extends "index.html" %} 
 
 {% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+{% endif %}
 <div class="container mt-4">
   <h1>Liste des personnels</h1>
   

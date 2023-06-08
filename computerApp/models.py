@@ -1,124 +1,47 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from computerApp.models import Machine, Personnel
-from .forms import AddMachineForm, AddPersonnelForm, DeleteMachineForm, DeletePersonnelForm
+from django.db import models
+from datetime import datetime
+from django import forms
+from django.utils import timezone
+from django.urls import reverse
+import computerApp.choices as choices
 
-
-# Fonction de vue pour afficher la page d'accueil
-def index(request):
-    # Récupérer tous les objets du modèle Personnel
-    personnels = Personnel.objects.all()
-    # Récupérer tous les objets du modèle Machine
-    machines = Machine.objects.all()
-    context = {
-        'personnel': personnels,
-        'machines': machines,
-    }
-    return render(request, 'index.html', context)
-
-
-# Fonction de vue pour afficher la liste des machines
-def machine_list_view(request):
-    # Récupérer tous les objets du modèle Machine
-    machines = Machine.objects.all()
-    context = {'machines': machines}
-    return render(request, 'computerApp/machines_list.html', context)
-
-
-# Fonction de vue pour afficher les détails d'une machine
-def machine_detail_view(request, pk):
-    # Récupérer l'objet Machine correspondant à l'ID donné
-    machine = get_object_or_404(Machine, id=pk)
-    context = {'machine': machine}
-    return render(request, 'computerApp/machines_detail.html', context)
-
-
-# Fonction de vue pour afficher la liste du personnel
-def personnel_list_view(request):
-    # Récupérer tous les objets du modèle Personnel
-    personnel = Personnel.objects.all()
-    context = {'personnels': personnel}
-    return render(request, 'computerApp/personnel_list.html', context)
-
-
-# Fonction de vue pour afficher les détails d'un membre du personnel
-def personnel_detail_view(request, pk):
-    # Récupérer l'objet Personnel correspondant à l'ID donné
-    personnel = get_object_or_404(Personnel, id=pk)
-    context = {'personnel': personnel}
-    return render(request, 'computerApp/personnel_detail.html', context)
-
-
-# Fonction de vue pour ajouter une machine
-def machine_add_view(request):
-    if request.method == 'POST':
-        form = AddMachineForm(request.POST)
-        if form.is_valid():
-            # Récupérer les données du formulaire
-            nom = form.cleaned_data['nom']
-            mach = form.cleaned_data['mach']
-            etat = form.cleaned_data['etat']
-            # Créer une nouvelle instance de Machine avec les données
-            new_machine = Machine(nom=nom, mach=mach, etat=etat)
-            new_machine.save()
-            return redirect('machines')
-    else:
-        form = AddMachineForm()
+# Create your models here.
+class Machine(models.Model):
     
-    context = {'form': form}
-    return render(request, 'computerApp/machines_list.html', context)
+
+    id = models.AutoField(primary_key=True, editable=False)
+    nom = models.CharField(max_length=20)
+    etat = models.BooleanField(default=False)
+    maintenanceDate = models.DateField(default = timezone.now())
+    mach = models.CharField(max_length=32, choices=choices.TYPE, default='PC')
+    ip = models.GenericIPAddressField(default='0.0.0.0')
+    appart = models.ForeignKey('Personnel', on_delete=models.SET_NULL, null=True, blank=False)
+    def __str__(self):
+        return self.nom
+    def delete(self):
+        super().delete()
+
+class Personnel(models.Model):
+
+    TYPE = (
+        ('Genre', ('Genre - à choisir ')),
+        ('Homme', ('Homme ')),
+        ('Femme', ('Femme ')),
+        ('ND', ('ND - ne préfaire pas ce prononcer')),
+    )
+
+    id = models.AutoField(primary_key=True, editable=False)
+    nom = models.CharField(max_length=10)
+    maintenanceDate = models.DateField(default = datetime.now())
+    mach = models.CharField(max_length=16, choices= TYPE, default='Genre')
+    mail = models.EmailField(editable=False,blank=True)
+    def __str__(self):
+        return self.nom
+    def delete(self):
+        super().delete()
+    # def save_mail(self,*args, **kwargs):
+    #     self.mail = f"{self.prenom.lower()}"
 
 
-# Fonction de vue pour ajouter un membre du personnel
-def personnel_add_view(request):
-    if request.method == 'POST':
-        form = AddPersonnelForm(request.POST)
-        if form.is_valid():
-            # Récupérer les données du formulaire
-            nom = form.cleaned_data['nom']
-            # Créer une nouvelle instance de Personnel avec les données
-            new_personnel = Personnel(nom=nom)
-            new_personnel.save()
-            return redirect('personnels')
-    else:
-        form = AddPersonnelForm()
-    
-    context = {'form': form}
-    return render(request, 'computerApp/personnel_list.html', context)
 
 
-# Fonction de vue pour supprimer des membres du personnel
-def personnel_delete_view(request):
-    if request.method == 'POST':
-        # Récupérer les IDs des membres du personnel à supprimer
-        personnels_ids = request.POST.getlist('personnels')
-        # Filtrer les objets Personnel correspondants aux IDs donnés
-        personnels = Personnel.objects.filter(id__in=personnels_ids)
-        # Supprimer les objets Personnel
-        personnels.delete()
-        return redirect('personnels')
-
-    personnels = Personnel.objects.all()
-    context = {'personnels': personnels}
-    return render(request, 'computerApp/personnel_list.html', context)
-
-
-# Fonction de vue pour supprimer des machines
-def machine_delete_view(request):
-    if request.method == 'POST':
-        # Récupérer les IDs des machines à supprimer
-        machines_ids = request.POST.getlist('machines')
-        # Filtrer les objets Machine correspondants aux IDs donnés
-        machines = Machine.objects.filter(id__in=machines_ids)
-        # Supprimer les objets Machine
-        machines.delete()
-        return redirect('machines')
-
-    machines = Machine.objects.all()
-    context = {'machines': machines}
-    return render(request, 'computerApp/machines_list.html', context)
-
-
-# Fonction de vue pour afficher la page de gestion
-def gestion_view(request):
-    context = {}
-    return render(request, 'computerApp/gestion.html', context)

@@ -1,15 +1,13 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from .models import Machine, Personnel
-from datetime import datetime, timezone
+from datetime import datetime, timezone, time
 import computerApp.choices as choices
 import re
 
-# Classe de widget pour le champ de date
 class DateInput(forms.DateInput):
     input_type = 'date'
 
-# Formulaire pour ajouter une machine
 class AddMachineForm(forms.Form):
     maintenanceDate = forms.DateField(widget=DateInput, label='Date de maintenance')
     nom = forms.CharField(required=True, label='Nom de la machine')
@@ -28,8 +26,10 @@ class AddMachineForm(forms.Form):
     def clean_maintenanceDate(self):
         # Validation du champ "maintenanceDate" pour s'assurer qu'il est supérieur ou égal à la date actuelle
         data = self.cleaned_data["maintenanceDate"]
-        if data < datetime.today().date():
-            raise ValidationError(_("Erreur de format pour le champ maintenanceDate"))
+        #.strftime('%Y-%m-%d')
+        today_datetime = datetime.today().date()
+        if data < today_datetime:
+            raise ValidationError((f"Erreur de format pour le champ maintenanceDate, {data}, {datetime.today().date()}"))
         return data
 
     def clean_ip(self):
@@ -37,25 +37,24 @@ class AddMachineForm(forms.Form):
         data = self.cleaned_data["ip"]
         regex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
         if not (re.search(regex, data)):
-            raise ValidationError(_("Erreur de format pour le champ maintenanceDate"))
+            raise ValidationError(("Erreur de format pour le champ IP"))
         return data
 
     def clean_mach(self):
         # Validation du champ "mach" pour s'assurer qu'il correspond à une valeur valide parmi les choix disponibles
         data = self.cleaned_data["mach"]
-        if data not in choices.TYPE:
-            raise ValidationError(_("Erreur de format pour le champ maintenanceDate"))
+        if data not in [choice[0] for choice in choices.TYPE]:
+            raise ValidationError(("Erreur de format pour le champ machine"))
         return data
     
     def clean_appart(self):
         # Validation du champ "appart" pour s'assurer qu'une valeur valide a été sélectionnée
         data = self.cleaned_data["appart"]
         if data is None:
-            raise ValidationError(_("Erreur de format pour le champ appart"))
+            raise ValidationError(("Erreur de format pour le champ appart"))
         return data
 
 
-# Formulaire pour ajouter du personnel
 class AddPersonnelForm(forms.Form):
     nom = forms.CharField(required=True, label='Nom du personnel')
     mail = forms.EmailField(max_length=50, label='Nom du mail')
@@ -75,7 +74,6 @@ class AddPersonnelForm(forms.Form):
         return data
 
 
-# Formulaire pour supprimer une ou plusieurs machines
 class DeleteMachineForm(forms.Form):
     machines = forms.ModelMultipleChoiceField(
         queryset=Machine.objects.all(),
@@ -83,7 +81,6 @@ class DeleteMachineForm(forms.Form):
     )
 
 
-# Formulaire pour supprimer du personnel
 class DeletePersonnelForm(forms.Form):
     personnels = forms.ModelMultipleChoiceField(
         queryset=Personnel.objects.all(),
